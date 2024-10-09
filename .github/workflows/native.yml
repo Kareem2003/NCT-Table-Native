@@ -27,9 +27,9 @@ jobs:
 
     # Log in to Expo using GitHub Secrets for Expo account credentials
     - name: EAS login
-      run: eas login --username ${{ secrets.EXPO_USERNAME }} --password ${{ secrets.EXPO_PASSWORD }}
+      run: eas login --username kareem061 --password KAreem@2012
 
-    # Build Android APK using EAS
+    # Build Android APK using EAS with the production profile
     - name: Build Android APK
       run: eas build --platform android --profile production
 
