@@ -15,14 +15,14 @@ jobs:
         with:
           node-version: 18.x
 
+      - name: Install dependencies
+        run: yarn install
+
       - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6
-
-      - name: Install dependencies
-        run: yarn install
 
       - name: Create preview
         run: eas update --auto
@@ -44,6 +44,8 @@ jobs:
 
       - name: Build Android APK
         run: eas build --platform android --profile production
+        env:
+          EXPO_TOKEN: Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6
 
       - name: Upload APK to GitHub Release
         uses: svenstaro/upload-release-action@v2
