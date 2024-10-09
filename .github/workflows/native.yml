@@ -27,7 +27,7 @@ jobs:
 
     # Log in to Expo (use GitHub secrets for Expo username and password)
     - name: Expo login
-      run: expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+      run: expo login -u kareem061 -p KAreem@2012
 
     # Build the Android APK or AAB
     - name: Build Android APK
