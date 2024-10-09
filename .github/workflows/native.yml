@@ -27,7 +27,7 @@ jobs:
 
     # Log in to Expo using the access token
     - name: EAS login
-      run: echo Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6 | eas login --non-interactive --token
+      run: eas login --token Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6
 
     # Build Android APK using EAS with the production profile
     - name: Build Android APK
