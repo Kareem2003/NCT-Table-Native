@@ -1,57 +1,44 @@
-name: Build and Preview
+name: EAS Android Build
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  workflow_dispatch:
 
 jobs:
-  update:
-    name: EAS Update
+  build-android:
+    name: 🎉 EAS Android Build
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
+    # Set up Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6
+    # Install EAS CLI
+    - name: Install EAS CLI
+      run: npm install -g eas-cli
 
-      - name: Install dependencies
-        run: yarn install
+    # Install dependencies
+    - name: Install dependencies
+      run: npm install
 
-      - name: Create preview
-        run: eas update --auto
+    # Log in to Expo using the access token
+    - name: EAS login
+      run: eas login --token Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6
 
-  build:
-    name: EAS Android Build
-    runs-on: ubuntu-latest
-    needs: update
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16.x'
+    # Build Android APK using EAS with the production profile
+    - name: Build Android APK
+      run: eas build --platform android --profile production
 
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
-
-      - name: Build Android APK
-        run: eas build --platform android --profile production
-
-      - name: Upload APK to GitHub Release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/*.apk
-          tag: v1.0
-          overwrite: true
-          body: "This is the first Android APK release built with EAS Build"
+    # Upload APK to GitHub Release
+    - name: Upload APK to GitHub Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: dist/*.apk
+        tag: v1.0
+        overwrite: true
+        body: "This is the first Android APK release built with EAS Build"
