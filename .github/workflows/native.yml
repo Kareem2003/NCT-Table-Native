@@ -25,9 +25,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # Log in to Expo using GitHub Secrets for Expo account credentials
+    # Log in to Expo using the access token
     - name: EAS login
-      run: eas login --username kareem061 --password KAreem@2012
+      run: echo Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6 | eas login --non-interactive --token
 
     # Build Android APK using EAS with the production profile
     - name: Build Android APK
