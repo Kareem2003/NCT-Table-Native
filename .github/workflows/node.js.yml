@@ -1,0 +1,56 @@
+name: Build
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  update:
+    name: EAS Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: Z-sZtJoYFZkXIkTxnkVHHn2HXt5Jncul-adljKi6
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Create preview
+        run: eas update --auto
+
+  build:
+    name: EAS Android Build
+    runs-on: ubuntu-latest
+    needs: update
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Build Android APK
+        run: eas build --platform android --profile production
+
+      - name: Upload APK to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: dist/*.apk
+          tag: v1.0
+          overwrite: true
+          body: "This is the first Android APK release built with EAS Build"
