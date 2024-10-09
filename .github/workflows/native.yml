@@ -1,0 +1,44 @@
+name: Expo Android Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: 🎉 Expo Android Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # Set up Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'  # Make sure this is compatible with Expo
+
+    # Install Expo CLI
+    - name: Install Expo CLI
+      run: npm install -g expo-cli
+
+    # Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Log in to Expo (use GitHub secrets for Expo username and password)
+    - name: Expo login
+      run: expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+
+    # Build the Android APK or AAB
+    - name: Build Android APK
+      run: expo build:android -t apk
+
+    # Upload the APK to GitHub Release
+    - name: Upload APK to GitHub Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: dist/*.apk
+        tag: v1.0
+        overwrite: true
+        body: "This is the first Expo Android APK release"
