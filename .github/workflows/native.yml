@@ -1,11 +1,11 @@
-name: Expo Android Build
+name: EAS Android Build
 
 on:
   workflow_dispatch:
 
 jobs:
   build-android:
-    name: 🎉 Expo Android Build
+    name: 🎉 EAS Android Build
     runs-on: ubuntu-latest
 
     steps:
@@ -15,25 +15,25 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16.x'  # Make sure this is compatible with Expo
+        node-version: '16.x'
 
-    # Install Expo CLI
-    - name: Install Expo CLI
-      run: npm install -g expo-cli
+    # Install EAS CLI
+    - name: Install EAS CLI
+      run: npm install -g eas-cli
 
     # Install dependencies
     - name: Install dependencies
       run: npm install
 
-    # Log in to Expo (use GitHub secrets for Expo username and password)
-    - name: Expo login
-      run: expo login -u kareem061 -p KAreem@2012
+    # Log in to Expo using GitHub Secrets for Expo account credentials
+    - name: EAS login
+      run: eas login --username ${{ secrets.EXPO_USERNAME }} --password ${{ secrets.EXPO_PASSWORD }}
 
-    # Build the Android APK or AAB
+    # Build Android APK using EAS
     - name: Build Android APK
-      run: expo build:android -t apk
+      run: eas build --platform android --profile production
 
-    # Upload the APK to GitHub Release
+    # Upload APK to GitHub Release
     - name: Upload APK to GitHub Release
       uses: svenstaro/upload-release-action@v2
       with:
@@ -41,4 +41,4 @@ jobs:
         file: dist/*.apk
         tag: v1.0
         overwrite: true
-        body: "This is the first Expo Android APK release"
+        body: "This is the first Android APK release built with EAS Build"
